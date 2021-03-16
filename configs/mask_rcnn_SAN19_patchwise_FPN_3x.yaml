@@ -1,0 +1,15 @@
+_BASE_: "Base-RCNN-SAN-FPN.yaml"
+MODEL:
+  #WEIGHTS: #path to SAN models "SAN/exp/imagenet/san19_patchwise/model/model_best.pth"
+  MASK_ON: False
+  SAN:
+    CONV_BODY : "SAN19_patchwise"
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0001
+  STEPS: (420000, 500000)
+  MAX_ITER: 540000
+  CHECKPOINT_PERIOD : 10000
+  # STEPS: (210000, 250000)
+  # MAX_ITER: 270000
+OUTPUT_DIR: "checkpoints/FRCN-SAN19-patchwise-3x"
