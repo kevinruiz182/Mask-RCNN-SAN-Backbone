@@ -1,3 +1,4 @@
+# Copyright (c) Youngwan Lee (ETRI) All Rights Reserved.
 from collections import OrderedDict
 import torch
 import torch.nn as nn
@@ -213,10 +214,12 @@ class SAN(Backbone):
 
 def san(cfg, sa_type, block, layers, kernels, num_classes):
     model = SAN(cfg, sa_type, block, layers, kernels, num_classes)
-    # model = torch.nn.DataParallel(model.cuda())
-    # checkpoint = torch.load("../SAN/exp/imagenet/san19_patchwise/model/model_best.pth", map_location=lambda storage, loc: storage.cuda(0))
-    # model.load_state_dict(checkpoint['state_dict'], strict=True)
-    return model
+    model = torch.nn.DataParallel(model.cuda())
+    checkpoint = torch.load("../SAN/exp/imagenet/san19_patchwise/model/model_best.pth", map_location= "cpu")
+    model.load_state_dict(checkpoint['state_dict'], strict=True)
+    toModules = [module for module in model.modules() if not isinstance(module, nn.Sequential)]
+    print(toModules[1])
+    return toModules[1]
 
 
 @BACKBONE_REGISTRY.register()
@@ -277,3 +280,4 @@ def build_san_fpn_backbone(cfg, input_shape: ShapeSpec):
         fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
     )
     return backbone
+
