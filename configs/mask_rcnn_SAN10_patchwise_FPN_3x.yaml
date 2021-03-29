@@ -1,9 +1,9 @@
 _BASE_: "Base-RCNN-SAN-FPN.yaml"
 MODEL:
-  #WEIGHTS: "/home/kvargas/kian/code/pytorch_cnn/san-detectron2/SAN/exp/imagenet/san10_pairwise/model/model_best.pth"
+  #WEIGHTS: "/home/kvargas/kian/code/pytorch_cnn/san-detectron2/SAN/exp/imagenet/san19_patchwise/model/model_best.pth"
   MASK_ON: False
   SAN:
-    CONV_BODY : "SAN10_pairwise"
+    CONV_BODY : "SAN10_patchwise"
 SOLVER:
   IMS_PER_BATCH: 1
   BASE_LR: 0.000001
@@ -12,4 +12,4 @@ SOLVER:
   CHECKPOINT_PERIOD : 10000
   # STEPS: (210000, 250000)
   # MAX_ITER: 270000
-OUTPUT_DIR: "checkpoints/FRCN-SAN10-pairwise-3x"
+OUTPUT_DIR: "checkpoints/FRCN-SAN10-patchwise-3x"

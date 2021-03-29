@@ -2,13 +2,13 @@ MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   BACKBONE:
     NAME: "build_san_fpn_backbone"
-    FREEZE_AT: 0
+    FREEZE_AT: 2
   SAN:
-    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
+    OUT_FEATURES: ["res2","res3","res4","res5"]
   FPN:
-    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+    IN_FEATURES: ["res2","res3","res4","res5"]
   ANCHOR_GENERATOR:
-    SIZES: [[32], [64], [128], [256], [512]]  # One size for each in feature map
+    SIZES: [[32, 64, 128, 256, 512]]  # One size for each in feature map
     ASPECT_RATIOS: [[0.5, 1.0, 2.0]]  # Three aspect ratios (same for all in feature maps)
   RPN:
     IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
@@ -30,8 +30,8 @@ MODEL:
     NAME: "MaskRCNNConvUpsampleHead"
     NUM_CONV: 4
     POOLER_RESOLUTION: 14
-  # PIXEL_MEAN: [103.530, 116.280, 123.675]
-  # PIXEL_STD: [57.375, 57.120, 58.395]
+  PIXEL_MEAN: [103.530, 116.280, 123.675]
+  PIXEL_STD: [57.375, 57.120, 58.395]
 DATASETS:
   TRAIN: ("coco_2017_train",)
   TEST: ("coco_2017_val",)
@@ -41,4 +41,5 @@ SOLVER:
   STEPS: (60000, 80000)
   MAX_ITER: 90000
 INPUT:
-  MIN_SIZE_TRAIN: (176, 184, 192, 200)
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+

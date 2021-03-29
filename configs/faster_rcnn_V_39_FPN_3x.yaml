@@ -1,0 +1,14 @@
+_BASE_: "Base-RCNN-VoVNet-FPN.yaml"
+MODEL:
+  WEIGHTS: "https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1"
+  MASK_ON: False
+  VOVNET:
+    CONV_BODY : "V-39-eSE"
+SOLVER:
+  # BASE_LR: 0.0001
+  CHECKPOINT_PERIOD : 1000
+  STEPS: (8400, 10000)
+  MAX_ITER: 10800
+  # STEPS: (210000, 250000)
+  # MAX_ITER: 270000
+OUTPUT_DIR: "checkpoints/FRCN-V2-39-3x"
