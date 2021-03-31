@@ -242,7 +242,7 @@ def san(cfg, sa_type, block, layers, kernels, num_classes):
         for param in module.parameters():
             param.requires_grad = False
 
-    sanModel.module = FrozenBatchNorm2d.convert_frozen_batchnorm(sanModel.module)
+    # sanModel.module = FrozenBatchNorm2d.convert_frozen_batchnorm(sanModel.module)
     toModules = [module for module in sanModel.modules() if not isinstance(module, nn.Sequential)]
     return toModules[1]
 
