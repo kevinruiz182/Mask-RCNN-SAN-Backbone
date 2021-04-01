@@ -21,6 +21,7 @@ SAN10_pairwise = {
     'layers': (2, 1, 2, 4, 1),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san10_pairwise/model/model_best.pth'
 }
 
 SAN10_patchwise = {
@@ -28,6 +29,7 @@ SAN10_patchwise = {
     'layers': (2, 1, 2, 4, 1),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san10_patchwise/model/model_best.pth'
 }
 
 SAN15_pairwise = {
@@ -35,6 +37,7 @@ SAN15_pairwise = {
     'layers': (3, 2, 3, 5, 2),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san15_pairwise/model/model_best.pth'
 }
 
 SAN15_patchwise = {
@@ -42,6 +45,7 @@ SAN15_patchwise = {
     'layers': (3, 2, 3, 5, 2),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san15_patchwise/model/model_best.pth'
 }
 
 SAN19_pairwise = {
@@ -49,6 +53,7 @@ SAN19_pairwise = {
     'layers': (3, 3, 4, 6, 3),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san19_pairwise/model/model_best.pth'
 }
 
 SAN19_patchwise = {
@@ -56,6 +61,7 @@ SAN19_patchwise = {
     'layers': (3, 3, 4, 6, 3),
     'kernels': [3, 7, 7, 7, 7],
     "num_classes": 1000,
+    'weights': 'san19_patchwise/model/model_best.pth'
 }
 
 _SAN_PARAMS = {
@@ -214,22 +220,20 @@ class SAN(Backbone):
         x = self.relu(self.bn4(self.layer4(self.conv4(self.pool(x))))) #2048
         outputs['res5'] = x
 
-        # for key in outputs:
-        #     print ("key: ", key)
-        #     print ("value: ", outputs[key].shape)
-
-        # x = self.avgpool(x)
-        # x = x.view(x.size(0), -1)
-        # x = self.fc(x)
         return outputs
 
 def san(cfg, sa_type, block, layers, kernels, num_classes):
+    #Create SAN Instance
     sanModel = SAN(cfg, sa_type, block, layers, kernels, num_classes)
+    #Load SAN pre-trained model on ImageNet using DataParallel action
     sanModel = torch.nn.DataParallel(sanModel.cuda())
-    checkpoint = torch.load("../SAN/exp/imagenet/san19_patchwise/model/model_best.pth", map_location= "cpu")
+    #Select SANXX.pth model pre-trained path
+    dirSANModel = cfg.MODEL.SAN.BASE_PATH + _SAN_PARAMS[cfg.MODEL.SAN.CONV_BODY]['weights']
+    checkpoint = torch.load(dirSANModel, map_location= "cpu")
+    #Load SANXX.pth model pre-trained
     sanModel.load_state_dict(checkpoint['state_dict'], strict=True)
 
-    #Freeze first 2 layers
+    #Set required Gradient to False of the first 2 layers
     frozen_range = [
                   sanModel.module.conv_in,
                   sanModel.module.bn_in,
@@ -268,15 +272,12 @@ def build_san_backbone(cfg, input_shape):
     san_kernels = san_params['kernels']
     san_num_classes = san_params['num_classes']
 
-
     model = san(cfg,
                 sa_type=san_sa_type,
                 block=Bottleneck,
                 layers=san_layers,
                 kernels=san_kernels,
                 num_classes=san_num_classes)
-
-
 
     model._out_features = out_features
     model._out_feature_channels = out_feature_channels
