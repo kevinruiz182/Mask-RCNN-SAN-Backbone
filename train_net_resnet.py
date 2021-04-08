@@ -65,11 +65,11 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = get_cfg()
-    add_san_config(cfg)
+    #add_san_config(cfg)
     #To run local SAN Models
     cfg.merge_from_file(args.config_file)
     #To run Resnet model
-    #cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
     cfg.merge_from_list(args.opts)
     cfg.freeze()
     default_setup(cfg, args)

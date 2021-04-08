@@ -239,7 +239,16 @@ def san(cfg, sa_type, block, layers, kernels, num_classes):
                   sanModel.module.bn_in,
                   sanModel.module.conv0,
                   sanModel.module.bn0,
-                  sanModel.module.layer0
+                  sanModel.module.layer0,
+                  sanModel.module.conv1,
+                  sanModel.module.bn1,
+                  sanModel.module.layer1,
+                  sanModel.module.conv2,
+                  sanModel.module.bn2,
+                  sanModel.module.layer2,
+                  sanModel.module.conv3,
+                  sanModel.module.bn3,
+                  sanModel.module.layer3
                 ]
 
     for module in frozen_range:
